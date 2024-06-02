@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'crypto_table.dart';
+
 class AuthScreen extends StatefulWidget {
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -28,6 +30,23 @@ class _AuthScreenState extends State<AuthScreen> {
       } else {
         await _auth.createUserWithEmailAndPassword(email: email, password: password);
       }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => TableScreen()),
+      );
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  void _loginAnonymously() async {
+    try {
+      await _auth.signInAnonymously();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => TableScreen()),
+      );
     } catch (error) {
       print(error);
     }
@@ -62,6 +81,14 @@ class _AuthScreenState extends State<AuthScreen> {
             TextButton(
               onPressed: _toggleMode,
               child: Text(_isLogin ? 'Create new account' : 'I already have an account'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _loginAnonymously,
+              child: Text('Login Anonymously'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey, // Background color
+              ),
             ),
           ],
         ),
